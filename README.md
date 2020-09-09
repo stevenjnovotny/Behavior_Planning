@@ -83,7 +83,7 @@ Several seemingly small features had a significant impact on the performance of 
 
 3) Internal variables vs parameters derived from sensor/localization data: at first, I determined all car parameters (lane, speed, etc) from sensor data instead of maintaining global parameters from the vehicle. This surprisingly caused a great deal of problems. When I switched to maintaining global variables and updating them in a model-based way, the AI worked much better. I am still considering why this was the case. I assume it may have been latency with the simulator, but I have yet to reach a conclusion.
 
-4) Lane Straddling: In some cases, when encountering two cars driving side by side at the same speed, the car would straddle two lanes--hopping between the two equally desirable (or undesirable) lanes--as shown below.  This was fixed by adding functionality that ensured the car didn't change lanes too often. This could have been implemented based on time; instead I based it on distance. I only allowed the car to change lance once between any three waypoints. This handled the inherent stochasticity of the road environment.
+4) Lane Straddling: In some cases, when encountering two cars driving side by side at the same speed, the car would straddle two lanes--hopping between the two equally desirable (or undesirable) lanes--as shown below.  This was fixed by adding functionality that ensured the car didn't change lanes too often. This could have been implemented based on time; instead I based it on distance. After a lane change, I forced the car to wait two waypoints before changing lanes again. This prevented the car from acting erratically in response to the inherent stochasticity of the road environment.
 
 ![alt text][image5]
 
