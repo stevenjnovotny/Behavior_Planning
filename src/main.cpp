@@ -196,13 +196,13 @@ int main() {
           // Output is a target lane and a delta_v
           double delta_v = 0;
           if ( lanes_blocked[1] ) { 
-            if ( !lanes_blocked[0] && lane > 0 && lane_speeds[lane-1] > 1.05* ref_vel && last_pass_wp != current_wp) {
+            if ( !lanes_blocked[0] && lane > 0 && lane_speeds[lane-1] > 1.05* ref_vel && current_wp > last_pass_wp + 1) {
               // change lanes left
               std::cout << lane << " -> ";
               lane--; 
               last_pass_wp = current_wp;
               std::cout << lane << std::endl;
-            } else if ( !lanes_blocked[2] && lane < 2 && lane_speeds[lane+1] > 1.05* ref_vel && last_pass_wp != current_wp){
+            } else if ( !lanes_blocked[2] && lane < 2 && lane_speeds[lane+1] > 1.05* ref_vel && current_wp > last_pass_wp + 1){
               // change lanes right
               std::cout << lane << " -> ";
               lane++; 

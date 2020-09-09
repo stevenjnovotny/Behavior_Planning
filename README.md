@@ -22,7 +22,7 @@ The algorithm used three conceptual states:
 
 These states (and transitions between them) were based on evaluating the sensor fusion data. By cycling through the car objects, the AI constructs the following two items that were used in decision making:
 
-["lanes_blocked"] A three element vector containing boolean values for whether or not the lane is blocked. The blocking is judged for current lane and adjacent lanes. The current lane is blocked if the predicted trajectories (of our car and the car  immediately in front) intersect or are within a particle threshold (e.g. 30 m). The side lanes are blocked if the predicted trajectories for cars ahead or behind intersect with ours, within a safe interval defined as 20 m behind or 15 m ahead.
+["lanes_blocked"] A three element vector containing boolean values for whether or not the lane is blocked. The blocking is judged for current lane and adjacent lanes. The current lane is blocked if the predicted trajectories (of our car and the car  immediately in front) intersect or are within a particle threshold (e.g. 30 m). The side lanes are blocked if the predicted trajectories for cars ahead or behind intersect with ours, within a safe interval defined as 20 m behind or 20 m ahead.
 
 ["lane_speeds"] A three element vector containing an estimate of lane speeds. The lane speeds were defined as the speed of the closest car ahead of our car's current position.
 
@@ -83,7 +83,7 @@ Several seemingly small features had a significant impact on the performance of 
 
 3) Internal variables vs parameters derived from sensor/localization data: at first, I determined all car parameters (lane, speed, etc) from sensor data instead of maintaining global parameters from the vehicle. This surprisingly caused a great deal of problems. When I switched to maintaining global variables and updating them in a model-based way, the AI worked much better. I am still considering why this was the case. I assume it may have been latency with the simulator, but I have yet to reach a conclusion.
 
-4) Lane Straddling: In some cases, when encountering two cars driving side by side at the same speed, the car would straddle two lanes--hopping between the two equally desirable (or undesirable) lanes--as shown below.  This was fixed by adding functionality that ensured the car didn't change lanes too often. This could have been implemented based on time; instead I based it on distance. I only allowed the car to change once between any two waypoints. This handled the inherent stochasticity of the road environment.
+4) Lane Straddling: In some cases, when encountering two cars driving side by side at the same speed, the car would straddle two lanes--hopping between the two equally desirable (or undesirable) lanes--as shown below.  This was fixed by adding functionality that ensured the car didn't change lanes too often. This could have been implemented based on time; instead I based it on distance. I only allowed the car to change lance once between any three waypoints. This handled the inherent stochasticity of the road environment.
 
 ![alt text][image5]
 
