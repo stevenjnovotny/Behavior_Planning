@@ -62,8 +62,9 @@ int main() {
   int lane = 1;
   double ref_vel = 0.0;
   int current_wp = 0;
+  int last_pass_wp = 0;
 
-  h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &current_wp, &ref_vel, &lane]
+  h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &current_wp, &ref_vel, &lane, &last_pass_wp]
     (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
 
     // "42" at the start of the message means there's a websocket message event.
@@ -179,7 +180,7 @@ int main() {
             }
           
             if (rel_lane == 0 || rel_lane == 2) {
-              lanes_blocked[rel_lane] = lanes_blocked[rel_lane] || (gap < 20.0  &&  gap > -15.0);
+              lanes_blocked[rel_lane] = lanes_blocked[rel_lane] || (gap < 20.0  &&  gap > -20.0);
             }
 
             if (gap < 0.0 && abs(gap) < forward_gaps[lane]) {
@@ -195,15 +196,17 @@ int main() {
           // Output is a target lane and a delta_v
           double delta_v = 0;
           if ( lanes_blocked[1] ) { 
-            if ( !lanes_blocked[0] && lane > 0 && lane_speeds[lane-1] > ref_vel) {
+            if ( !lanes_blocked[0] && lane > 0 && lane_speeds[lane-1] > 1.05* ref_vel && last_pass_wp != current_wp) {
               // change lanes left
               std::cout << lane << " -> ";
               lane--; 
+              last_pass_wp = current_wp;
               std::cout << lane << std::endl;
-            } else if ( !lanes_blocked[2] && lane < 2 && lane_speeds[lane+1] > ref_vel){
+            } else if ( !lanes_blocked[2] && lane < 2 && lane_speeds[lane+1] > 1.05* ref_vel && last_pass_wp != current_wp){
               // change lanes right
               std::cout << lane << " -> ";
               lane++; 
+              last_pass_wp = current_wp;
               std::cout << lane << std::endl;
             } else if (ref_vel > lane_speeds[lane]) {
               // slow down

@@ -9,6 +9,7 @@ The goals of this project were to safely navigate around a virtual highway with 
 [image2]: ./behavior2.png "Follow Path"
 [image3]: ./behavior3.png "Maintain Spacing and Speed"
 [image4]: ./behavior4.png "Change Lanes"
+[image5]: ./behavior5.png "Lane Straddling"
 
 ### Overall Scheme
 
@@ -81,6 +82,11 @@ Several seemingly small features had a significant impact on the performance of 
 2) Evaluating lane speeds to determine appropriate following speed: I originally commanded to car to decrease speed if it was within a certain distance to a leading car. This resulted in jerky motion as the car would continue to decelerate, reach a safe distance, accelerate again, and then repeat the whole process. I ultimately set the spped decrease to occur only if the leading car was going slower that our car. This resulted in a much smoother following motion.
 
 3) Internal variables vs parameters derived from sensor/localization data: at first, I determined all car parameters (lane, speed, etc) from sensor data instead of maintaining global parameters from the vehicle. This surprisingly caused a great deal of problems. When I switched to maintaining global variables and updating them in a model-based way, the AI worked much better. I am still considering why this was the case. I assume it may have been latency with the simulator, but I have yet to reach a conclusion.
+
+4) Lane Straddling: In some cases, when encountering two cars driving side by side at the same speed, the car would straddle two lanes--hopping between the two equally desirable (or undesirable) lanes--as shown below.  This was fixed by adding functionality that ensured the car didn't change lanes too often. This could have been implemented based on time; instead I based it on distance. I only allowed the car to change once between any two waypoints. This handled the inherent stochasticity of the road environment.
+
+![alt text][image5]
+
 
 ### Simulator.
 This project uses the (Unity-based) Udacity self-driving car simulator that can be downloaded from the [releases tab (https://github.com/udacity/self-driving-car-sim/releases/tag/T3_v1.2).  
